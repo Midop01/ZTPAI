@@ -8,9 +8,6 @@ PC-Party to platforma społecznościowa stworzona dla entuzjastów komputerów, 
 - 📸 Udostępnianie zdjęć setupów komputerowych
 - 💬 Komentowanie i dyskusje
 - ❤️ System polubień
-- 👤 Profile użytkowników
-- 🔍 Wyszukiwanie postów
-- 🏷️ Kategoryzacja postów (gaming, workstation, custom builds, itp.)
 
 ### Funkcje techniczne
 - 🔐 JWT Authentication
@@ -47,7 +44,6 @@ PC-Party to platforma społecznościowa stworzona dla entuzjastów komputerów, 
 
 1. Sklonuj repozytorium:bash
 git clone https://github.com/Midop01/ZTPAI
-cd pc-party
 
 2. Zbuduj i uruchom kontenery:
 ```bash
@@ -168,25 +164,12 @@ backend/
 | post_id        | INTEGER     | FK -> Post.id          |
 | created_at     | TIMESTAMP   | Data polubienia        |
 
-### Tag
-| Kolumna        | Typ         | Opis                    |
-|----------------|-------------|-------------------------|
-| id             | INTEGER     | Klucz główny           |
-| name           | VARCHAR(50) | Nazwa tagu             |
-
-### PostTag
-| Kolumna        | Typ         | Opis                    |
-|----------------|-------------|-------------------------|
-| post_id        | INTEGER     | FK -> Post.id          |
-| tag_id         | INTEGER     | FK -> Tag.id           |
-
 ### Relacje
 
 - User 1:N Post (Jeden użytkownik może mieć wiele postów)
 - User 1:N Comment (Jeden użytkownik może mieć wiele komentarzy)
 - Post 1:N Comment (Jeden post może mieć wiele komentarzy)
 - User N:M Post (poprzez Like - użytkownik może lubić wiele postów)
-- Post N:M Tag (poprzez PostTag - post może mieć wiele tagów)
 
 ### Indeksy
 - User: email (unique), username (unique)
@@ -194,7 +177,6 @@ backend/
 - Comment: post_id, author_id
 - Like: (user_id, post_id) unique
 - Tag: name (unique)
-- PostTag: (post_id, tag_id) unique
 
 ## 👥 Autorzy
 
