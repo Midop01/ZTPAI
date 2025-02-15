@@ -25,7 +25,7 @@ def create_app():
         SWAGGER_URL,
         API_URL,
         config={
-            'app_name': "Social Media API"
+            'app_name': "PC Party"
         }
     )
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
@@ -44,7 +44,7 @@ def create_app():
 
     @app.route('/')
     def index():
-        return jsonify(message="Hello from Flask!")
+        return jsonify(message="Welcome to PC Party!")
     
     with app.app_context():
         db.create_all()

@@ -166,7 +166,7 @@
 
 <nav class="blue darken-3">
   <div class="nav-wrapper container">
-    <a href="#" class="brand-logo">My App</a>
+    <a href="/" class="brand-logo">PC-Party</a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
       <li><a on:click={() => {fetchPosts() ; view = 'home'}}>Home</a></li>
       {#if !token}
