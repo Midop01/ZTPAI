@@ -1,5 +1,12 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 
 api = Blueprint('api', __name__)
 
-from . import auth, posts, comments
+@api.route('/')
+def api_index():
+    return jsonify({"message": "API is working"})
+
+# Import other routes
+from .auth import *
+from .comments import *
+from .images import *

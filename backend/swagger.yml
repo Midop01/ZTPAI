@@ -1,0 +1,227 @@
+openapi: 3.0.0
+info:
+  title: Social Media API
+  description: API dla aplikacji społecznościowej
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000/api
+    description: Serwer deweloperski
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+    
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        author_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        likes_count:
+          type: integer
+    
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        post_id:
+          type: integer
+        author_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+paths:
+  /auth/register:
+    post:
+      summary: Rejestracja nowego użytkownika
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Użytkownik zarejestrowany
+        '400':
+          description: Błędne dane
+
+  /auth/login:
+    post:
+      summary: Logowanie użytkownika
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Zalogowano pomyślnie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+        '401':
+          description: Nieprawidłowe dane logowania
+
+  /posts:
+    get:
+      summary: Pobierz listę postów
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Numer strony
+      responses:
+        '200':
+          description: Lista postów
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+    
+    post:
+      summary: Utwórz nowy post
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        '201':
+          description: Post utworzony
+        '401':
+          description: Brak autoryzacji
+
+  /posts/{post_id}/comments:
+    get:
+      summary: Pobierz komentarze do posta
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista komentarzy
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+
+    post:
+      summary: Dodaj komentarz do posta
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        '201':
+          description: Komentarz dodany
+        '401':
+          description: Brak autoryzacji
+
+  /posts/{post_id}/like:
+    post:
+      summary: Polub post
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: post_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post polubiony
+        '401':
+          description: Brak autoryzacji
+
+  /images/upload:
+    post:
+      summary: Prześlij obraz
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Obraz przesłany
+        '401':
+          description: Brak autoryzacji 

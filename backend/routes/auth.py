@@ -30,7 +30,12 @@ def login():
     if user and user.check_password(password):
         token = jwt.encode({
             'user_id': user.id,
-            'exp': datetime.utcnow() + timedelta(hours=1)
+            'exp': datetime.utcnow() + timedelta(hours=1),
+            "sub": username
         }, Config.SECRET_KEY, algorithm='HS256')
-        return jsonify({'token': token})
+        return jsonify({
+            'token': token,
+            "username": username,
+            "user_id": user.id
+        })
     return jsonify({'error': 'Invalid credentials'}), 401

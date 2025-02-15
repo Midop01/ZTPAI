@@ -1,27 +1,46 @@
 #!/usr/bin/env python3
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from extensions import db, bcrypt, jwt
-from swagger import swagger_ui_blueprint, SWAGGER_URL, spec
 from flask_cors import CORS
+from flask_swagger_ui import get_swaggerui_blueprint
+import yaml
+
 
 def create_app():
     app = Flask(__name__)
-    CORS(app)
     app.config.from_object('config.Config')
-    
-    # Inicjalizacja rozszerzeń
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    # Rejestracja blueprintów
+    # note: CORS is allowed by default for all hostnames
+    # which isn't secure
+    CORS(app)
+
+    # Konfiguracja Swagger UI
+    SWAGGER_URL = '/api/docs'
+    API_URL = '/api/swagger.json'
+    
+    swaggerui_blueprint = get_swaggerui_blueprint(
+        SWAGGER_URL,
+        API_URL,
+        config={
+            'app_name': "Social Media API"
+        }
+    )
+    app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+
+    # Endpoint do serwowania specyfikacji Swagger
+    @app.route('/api/swagger.json')
+    def swagger():
+        try:
+            with open('./swagger.yml', 'r', encoding='utf-8') as f:
+                return jsonify(yaml.safe_load(f))
+        except FileNotFoundError:
+            return jsonify({"error": "Swagger file not found"}), 404
+
     from routes import api
     app.register_blueprint(api, url_prefix='/api')
-    app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
-
-    @app.route('/api/swagger.json')
-    def create_swagger_spec():
-        return jsonify(spec.to_dict())
 
     @app.route('/')
     def index():
