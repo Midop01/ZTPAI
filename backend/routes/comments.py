@@ -11,7 +11,7 @@ def add_comment():
     content = data.get('content')
     post_id = data.get('post_id')
     user_id = get_jwt_identity()
-    # Data validation omitted for brevity.
+
     comment = Comment(content=content, post_id=post_id, user_id=user_id)
     db.session.add(comment)
     db.session.commit()
@@ -21,7 +21,7 @@ def add_comment():
 @jwt_required()
 def get_comments(post_id):
     comments = Comment.query.filter_by(post_id=post_id).all()
-    # Minimal serialization.
+
     output = []
     for comment in comments:
         output.append({

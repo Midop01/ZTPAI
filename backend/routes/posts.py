@@ -48,7 +48,6 @@ def add_post():
 
     author_id = author.id
 
-    # Data validation omitted for brevity.
     file_uuid = str(uuid.uuid4())
     post = Post(
         title=title,

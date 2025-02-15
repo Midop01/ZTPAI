@@ -10,7 +10,7 @@ class User(db.Model):
     # One-to-many: posts authored by user.
     posts = relationship('Post', backref='author', lazy=True)
     # Many-to-many: posts liked by user.
-    liked_posts = relationship('Post', secondary='likes', backref='likers')
+    #liked_posts = relationship('Post', secondary='likes', backref='likers')
 
     def set_password(self, password):
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')

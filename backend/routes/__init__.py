@@ -10,3 +10,5 @@ def api_index():
 from .auth import *
 from .comments import *
 from .images import *
+from .posts import *
+from .likes import *

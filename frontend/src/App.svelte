@@ -120,6 +120,52 @@
           console.error(e);
       }
   }
+  
+  async function fetchLikes(postId) {
+    try {
+        const res = await fetch('http://localhost:5000/api/post/' + postId + '/likes', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const likes = await res.json();
+        return likes.count
+    } catch (e) {
+        console.error(e);
+        return -1;
+    }
+  }
+
+  async function addLike(postId) {
+    try {
+        if (await fetchIsLiked(postId)) {
+          alert("Post already liked.")
+          return;
+        }
+
+        const res = await fetch('http://localhost:5000/api/post/' + postId + '/like', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+        });
+
+        alert("Post liked. Refresh page to see effect.")
+    } catch (e) {
+        console.error(e);
+        alert("Failed to save your vote. Try again later.")
+    }
+  }
+
+  async function fetchIsLiked(postId) {
+    try {
+        const res = await fetch('http://localhost:5000/api/post/' + postId + '/like', {
+            headers: { 'Authorization': 'Bearer ' + token },
+        });
+
+        const message = await res.json();
+
+        return message.is_liked;
+    } catch (e) {
+        console.error(e);
+    }
+  }
 
   async function fetchComments(postId) {
       selectedPostId = postId;
@@ -207,8 +253,7 @@
         <span class="card-title">Register</span>
         {#if authError}<p class="red-text">{authError}</p>{/if}
         <div class="input-field">
-          <input id="username" type="text" bind:value={username}>
-          <label for="username">Username</label>
+          <input id="username" type="text" placeholder="Username" bind:value={username}>
         </div>
         <div class="input-field">
           <input id="email" type="email" bind:value={email}>
@@ -261,6 +306,16 @@
             <p>
               <img src={`http://localhost:5000/api/image/${post.filename}`} alt={post.description}/>
             </p>
+            {#await fetchLikes(post.id) then likes}
+            <p>
+              <b> Likes: {likes} </b>
+              {#await fetchIsLiked(post.id) then isLiked}
+                {#if !isLiked}
+                  <button class="btn grey darken-2" on:click={() => addLike(post.id)}> +1 </button>
+                {/if}
+              {/await}
+            </p>
+          {/await}
           </div>
           <div class="card-action">
             <button class="btn grey darken-2" on:click={() => fetchComments(post.id)}>View Comments</button>
@@ -318,6 +373,16 @@
             <p>
               <img src={`http://localhost:5000/api/image/${post.filename}`} alt={post.description}/>
             </p>
+          {#await fetchLikes(post.id) then likes}
+            <p>
+              <b> Likes: {likes} </b>
+              {#await fetchIsLiked(post.id) then isLiked}
+                {#if !isLiked}
+                  <button class="btn grey darken-2" on:click={() => addLike(post.id)}> +1 </button>
+                {/if}
+              {/await}
+            </p>
+          {/await}
           </div>
           <div class="card-action">
             <button class="btn grey darken-2" on:click={() => fetchComments(post.id)}>View Comments</button>

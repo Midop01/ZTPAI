@@ -130,39 +130,37 @@ backend/
 ### User
 | Kolumna        | Typ         | Opis                    |
 |----------------|-------------|-------------------------|
-| id             | INTEGER     | Klucz główny           |
-| username       | VARCHAR(64) | Nazwa użytkownika      |
-| email          | VARCHAR(120)| Adres email            |
-| password_hash  | VARCHAR(128)| Zahashowane hasło      |
-| created_at     | TIMESTAMP   | Data utworzenia konta  |
+| id             | INTEGER     | Klucz główny            |
+| username       | VARCHAR(64) | Nazwa użytkownika       |
+| email          | VARCHAR(120)| Adres email             |
+| password_hash  | VARCHAR(128)| Zahashowane hasło       |
+| created_at     | TIMESTAMP   | Data utworzenia konta   |
 
 ### Post
 | Kolumna        | Typ         | Opis                    |
 |----------------|-------------|-------------------------|
-| id             | INTEGER     | Klucz główny           |
-| title          | VARCHAR(100)| Tytuł postu            |
-| content        | TEXT        | Opis setupu            |
-| image_url      | VARCHAR(255)| URL zdjęcia            |
-| author_id      | INTEGER     | FK -> User.id          |
-| created_at     | TIMESTAMP   | Data utworzenia        |
-| updated_at     | TIMESTAMP   | Data aktualizacji      |
+| id             | INTEGER     | Klucz główny            |
+| title          | VARCHAR(100)| Tytuł postu             |
+| content        | TEXT        | Opis setupu             |
+| image_data     | Large Binary| Zdjęcie                 |
+| image_name     | VARCHAR(256)| Nazwa zdjęcia           |
+| author_id      | INTEGER     | FK -> User.id           |
+| created_at     | TIMESTAMP   | Data utworzenia         |
 
 ### Comment
 | Kolumna        | Typ         | Opis                    |
 |----------------|-------------|-------------------------|
-| id             | INTEGER     | Klucz główny           |
-| content        | TEXT        | Treść komentarza       |
-| author_id      | INTEGER     | FK -> User.id          |
-| post_id        | INTEGER     | FK -> Post.id          |
-| created_at     | TIMESTAMP   | Data utworzenia        |
+| id             | INTEGER     | Klucz główny            |
+| content        | TEXT        | Treść komentarza        |
+| author_id      | INTEGER     | FK -> User.id           |
+| post_id        | INTEGER     | FK -> Post.id           |
+| created_at     | TIMESTAMP   | Data utworzenia         |
 
 ### Like
 | Kolumna        | Typ         | Opis                    |
 |----------------|-------------|-------------------------|
-| id             | INTEGER     | Klucz główny           |
-| user_id        | INTEGER     | FK -> User.id          |
-| post_id        | INTEGER     | FK -> Post.id          |
-| created_at     | TIMESTAMP   | Data polubienia        |
+| user_id        | INTEGER     | FK -> User.id           |
+| post_id        | INTEGER     | FK -> Post.id           |
 
 ### Relacje
 
